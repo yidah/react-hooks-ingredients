@@ -48,9 +48,11 @@ const Ingredients = () => {
     dispatch({ type: 'SET', ingredients: filteredIngredients });
   }, []);
 
-  const addIngredientHandler = (ingredient) => {
+  const addIngredientHandler = useCallback( (ingredient) => {
     // setIsLoading(true);
-    dispatchHttp({type:'SEND'});
+    // dispath functions are not added as a dependency for the effect of the useCallback hook 
+    // as React guarantees it will not re-render
+    dispatchHttp({type:'SEND'}); 
     fetch(
       'https://react-hooks-ingredients-d4c75-default-rtdb.firebaseio.com/ingredients.json',
       {
@@ -75,9 +77,9 @@ const Ingredients = () => {
           ingredient: { id: responseData.name, ...ingredient },
         });
       });
-  };
+  }, []);
 
-  const removeIngredientHandler = (ingredientId) => {
+  const removeIngredientHandler = useCallback((ingredientId) => {
     // setIsLoading(true);
     dispatchHttp({type:'SEND'});
     fetch(
@@ -101,7 +103,7 @@ const Ingredients = () => {
         // setIsLoading(false);
         dispatchHttp({type:'ERROR', error: "Error"});
       });
-  };
+  },[]);
 
   const clearError = () => {
     // setError(null);
